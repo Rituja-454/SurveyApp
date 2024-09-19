@@ -1,0 +1,118 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Scanner;
+
+
+public class SurveyApp {
+
+    static ArrayList<User> registeredUsers = new ArrayList<>();
+    static HashMap<String, String> responses = new HashMap<>();
+
+    public static void main(String[] args) {
+        
+        registeredUsers.add(new User("user1@gmail.com", "password1"));
+        registeredUsers.add(new User("user2@gmail.com", "password2"));
+
+        Scanner sc = new Scanner(System.in);
+
+    
+        while (true) {
+            System.out.println("\nWelcome to the Survey App!");
+            System.out.println("1. Register\n2. Login\n3. Take Survey (Anonymous)\n4. Exit");
+            int choice = sc.nextInt();
+            sc.nextLine(); 
+
+            switch (choice) {
+                case 1:
+                    registerUser(sc);
+                    break;
+                case 2:
+                    loginUser(sc);
+                    break;
+                case 3:
+                    takeSurveyAnonymously(sc);
+                    break;
+                case 4:
+                    System.out.println("Thank you for using the Survey App!");
+                    return;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    break;
+            }
+        }
+    }
+
+    // Method to register a new user
+    public static void registerUser(Scanner sc) {
+        System.out.print("Enter your email: ");
+        String email = sc.nextLine();
+        System.out.print("Enter your password: ");
+        String password = sc.nextLine();
+
+        // Check if user already exists
+        for (User user : registeredUsers) {
+            if (user.getEmail().equals(email)) {
+                System.out.println("User already registered with this email.");
+                return;
+            }
+        }
+
+        User newUser = new User(email, password);
+        registeredUsers.add(newUser);
+        System.out.println("Registration successful!");
+    }
+
+    // Method to login an existing user
+    public static void loginUser(Scanner sc) {
+        System.out.print("Enter your email: ");
+        String email = sc.nextLine();
+        System.out.print("Enter your password: ");
+        String password = sc.nextLine();
+
+        for (User user : registeredUsers) {
+            if (user.getEmail().equals(email) && user.getPassword().equals(password)) {
+                System.out.println("Login successful! Now you can participate in surveys.");
+                takeSurvey(sc, email);
+                return;
+            }
+        }
+        System.out.println("Invalid email or password. Please try again.");
+    }
+
+    // Method for anonymous survey submission
+    public static void takeSurveyAnonymously(Scanner sc) {
+        System.out.println("Taking survey anonymously...");
+        System.out.print("Please enter your feedback: ");
+        String feedback = sc.nextLine();
+        responses.put("Anonymous" + responses.size(), feedback); 
+        System.out.println("Thank you for your feedback!");
+    }
+
+    // Method to take survey as a registered user
+    public static void takeSurvey(Scanner sc, String userEmail) {
+        System.out.println("Taking survey as: " + userEmail);
+        System.out.print("Please enter your feedback: ");
+        String feedback = sc.nextLine();
+        responses.put(userEmail, feedback);
+        System.out.println("Thank you for your feedback!");
+    }
+
+    // User class to represent registered users
+    static class User {
+        private String email;
+        private String password;
+
+        public User(String email, String password) {
+            this.email = email;
+            this.password = password;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+    }
+}
